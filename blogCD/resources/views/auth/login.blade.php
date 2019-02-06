@@ -1,9 +1,12 @@
-@extends('layouts.app')
+@extends('template')
+@section('nav')
+@include('layout.navDefault')
+@endsection
+@section('contenu')
 
-@section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-8" style="margin-top: 10px; margin-bottom: 10px;">
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 
@@ -70,4 +73,14 @@
         </div>
     </div>
 </div>
+@endsection
+@section('script')
+  <!-- Bootstrap core JavaScript -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <!-- animsition.js -->
+  <script src="js/animsition.min.js"></script>
+
+  <script src="js/fade.js"></script>
 @endsection
