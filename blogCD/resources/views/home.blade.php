@@ -14,21 +14,28 @@
 
                 <div class="card-header" >Vous êtez maintenant connecté</div>
 
-                <div class="card-body" >
+                <div class="card-body" id="home">
                     @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
                     </div>
                     @endif
 
+                    <img class="img-fluid rounded" src="{{ Auth::user()->photo }}">
                     Bienvenue {{ Auth::user()->name }}
+
+
+                </div>
+                 <div class="card-footer" >
+                    Vous allez être automatiquement redirigé
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+
 @endsection
+
 @section('script')
 <!-- Bootstrap core JavaScript -->
 <script src="vendor/jquery/jquery.min.js"></script>
@@ -38,4 +45,6 @@
 <script src="js/animsition.min.js"></script>
 
 <script src="js/fade.js"></script>
+{{-- <script src="js/redirect.js"></script> --}}
+<script src="js/redirect.js"></script>
 @endsection

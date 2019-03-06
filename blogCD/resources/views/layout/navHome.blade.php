@@ -19,7 +19,7 @@
           </li>
 
           <li class="nav-item">
-            <a class="nav-link animsition-link" href="/extra" >Extra</a>
+            <a class="nav-link animsition-link" href="/forum" >Forum</a>
           </li>
           <li class="nav-item">
             <a class="nav-link animsition-link" href="/animation">Animation</a>

@@ -18,7 +18,7 @@
           </li>
 
           <li class="nav-item active">
-            <a class="nav-link animsition-link" href="/extra" >Extra</a>
+            <a class="nav-link animsition-link" href="/forum" >Forum</a>
             <span class="sr-only">(current)</span>
           </li>
           <li class="nav-item">

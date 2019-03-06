@@ -15,10 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/extra', function () {
-    return view('show.extra');
-});
-
 Route::get('/overlay', function () {
     return view('animsition.overlay');
 });
@@ -41,3 +37,25 @@ Route::get('/register', function () {
 
 Route::get('/video', 'YtbController@displayYt');
 Route::get('/carousel', 'YtbController@carousel');
+
+//Crétion d'un nouveau sujet
+Route::get('/newSujet', function () {
+    return view('forum.newSujet');
+});
+Route::post('/newSujet', 'SujetsController@post');
+Route::get('/forum', 'SujetsController@show');
+
+Route::get('/showOneSujet/{id}', 'CommentsController@show');
+
+
+//Route::post('/showOneSujet/{id}', 'CommentsController@newCommentPost');
+
+
+Route::get('/showOneSujet/{idSujet}/{numPage}', 'CommentsController@showMore');
+
+Route::get('/answer/{idComment}', 'CommentsController@answer');
+
+Route::get('/userInfo/{idUser}', 'HomeController@showUserInfo');
+
+Route::post('/nav/{id}', 'CommentsController@navPost');
+Route::post('/newComment/{id}', 'CommentsController@newCommentPost');

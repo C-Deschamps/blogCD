@@ -41,7 +41,7 @@
 
 
          @foreach ($listId as $idVid)
-         <div class="col-lg-4">
+         <div class="col-lg-3 col-md-4 col-xs-6 thumb">
          <div class="embed-responsive embed-responsive-21by9">
          {!! Youtube::getVideoInfo($idVid)->player->embedHtml !!}
          </div>

@@ -14,16 +14,18 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet" type="text/css">
 
   <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ URL::asset('vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
 
    <!-- Material Design Bootstrap -->
-  <link href="css/mdb.min.css" rel="stylesheet">
+  <link href="{{ URL::asset('css/mdb.min.css') }}" rel="stylesheet">
 
   <!-- Custom styles for this template -->
-  <link href="css/welcome.css" rel="stylesheet">
+  <link href="{{ URL::asset('css/welcome.css') }}" rel="stylesheet">
 
   <!-- animsition.css -->
-  <link rel="stylesheet" href="css/animsition.min.css">
+  <link rel="stylesheet" href="{{ URL::asset('css/animsition.min.css') }}">
+
    <!-- Fontawesome -->
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 

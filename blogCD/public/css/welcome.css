@@ -12,7 +12,9 @@ body {
 }
 
 
+#home {
 
+}
 
 .carousel-control-next-icon:after
 {
@@ -25,4 +27,53 @@ body {
   content: '<';
   font-size: 55px;
   color: white;
+}
+
+.thumb{
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+#sujet-header {
+  clear: both;
+  margin-bottom: 1em;
+  border-bottom: 1px solid #e4e6e8;
+}
+
+.bottomPage {
+  float: right;
+  margin-top: 5px;
+  width: 100%;
+}
+
+/*permet de rendre toute une colonne cliquable*/
+th a {
+    display: block;
+}
+
+.hint
+{
+  font-size:0.8em;
+
+ }
+
+.card-horizontal {
+    display: flex;
+    flex: 1 1 auto;
+
+}
+#comment {
+  text-align: left;
+}
+
+#user-header {
+  border-right: 1px solid #e4e6e8;
+}
+
+.showComment {width: 80%;}
+
+.nomComment {width: 20%;}
+
+#label {
+  width: 100%;
 }

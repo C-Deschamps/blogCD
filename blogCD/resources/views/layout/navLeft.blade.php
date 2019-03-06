@@ -1,8 +1,11 @@
 
 
 <!-- Navigation -->
+
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
   <div class="container">
+
     @guest
     <a class="navbar-brand" href="{{ route('login') }}">Se connecter</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,6 +23,10 @@
       </a>
 
       <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+         <a class="dropdown-item" href="/userInfo/{{ Auth::user()->id }}"
+        >
+        {{ __('Mes informations') }}
+      </a>
         <a class="dropdown-item" href="{{ route('logout') }}"
         onclick="event.preventDefault();
         document.getElementById('logout-form').submit();">
