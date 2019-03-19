@@ -59,3 +59,12 @@ Route::get('/userInfo/{idUser}', 'HomeController@showUserInfo');
 
 Route::post('/nav/{id}', 'CommentsController@navPost');
 Route::post('/newComment/{id}', 'CommentsController@newCommentPost');
+
+Route::get('/admin/createQuizz', function () {
+    return view('admin.createQuizz');
+});
+
+Route::post('/postQuizz', 'QuizController@postQuizz');
+
+Route::get('/quizz', 'QuizController@show');
+Route::get('/showQuizz/{id}', 'QuizController@showOne');

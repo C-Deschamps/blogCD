@@ -38,7 +38,7 @@ function answerComment(){
 
 }
 
-$('#newComment').on('keyup',function()
+$('#textComment').on('keyup',function()
 {
    var maxlen = $(this).attr('maxlength');
 
@@ -64,14 +64,14 @@ $('#answer').on('keyup',function()
   var rest = maxlen - length;
 
   if(length > (maxlen-10) ){
-    $('#textarea_messag').text('Il vous reste '+ rest +' charactères !').css('color', 'red')
+    $('#textarea_messageAnswer').text('Il vous reste '+ rest +' charactères !').css('color', 'red')
   }
   else if (length > maxlen-500)
     {
-      $('#textarea_message').text(length + '/' + maxlen).css('color', 'black');
+      $('#textarea_messageAnswer').text(length + '/' + maxlen).css('color', 'black');
     }
   else {
-    $('#textarea_message').text('2000 charactères maximum').css('color', 'black');
+    $('#textarea_messageAnswer').text('2000 charactères maximum').css('color', 'black');
   }
 });
 

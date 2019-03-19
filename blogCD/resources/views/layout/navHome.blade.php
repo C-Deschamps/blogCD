@@ -21,6 +21,11 @@
           <li class="nav-item">
             <a class="nav-link animsition-link" href="/forum" >Forum</a>
           </li>
+          @auth
+          <li class="nav-item">
+            <a class="nav-link animsition-link" href="/admin/createQuizz" >Créer un quizz</a>
+          </li>
+          @endauth
           <li class="nav-item">
             <a class="nav-link animsition-link" href="/animation">Animation</a>
           </li>

@@ -22,6 +22,7 @@
 
   <!-- Custom styles for this template -->
   <link href="{{ URL::asset('css/welcome.css') }}" rel="stylesheet">
+  <link href="{{ URL::asset('css/showQuizz.css') }}" rel="stylesheet">
 
   <!-- animsition.css -->
   <link rel="stylesheet" href="{{ URL::asset('css/animsition.min.css') }}">

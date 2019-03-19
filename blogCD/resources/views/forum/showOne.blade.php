@@ -16,6 +16,9 @@
 </div>
 <div class="mb-5">
 
+@if(!$nbrMessages == 0)
+  @if($nbrMessages > 10)
+
 <div class="float-right">
    <form method="POST" action="{{ action('CommentsController@navPost', $sujet->id) }}" accept-charset="UTF-8">
       <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -25,12 +28,12 @@
       <input class="btn btn-sm btn-outline-info pull-right" type="submit" value="Go !">
     </form>
 </div>
-
+  @endif
 </div>
 <!-- Blog Entries Column -->
 
 <div class="col-md-10">
-@if($nbrMessages == 0)
+@else
 <div class="mx-auto text-center">
   <p class="lead">Poste le premier commentaire de ce sujet !</p>
 </div>
@@ -147,7 +150,7 @@
     <form method="POST" action="{{ action('CommentsController@newCommentPost', $sujet->id) }}" accept-charset="UTF-8">
       <input type="hidden" name="_token" value="{{ csrf_token() }}">
 
-      <textarea class="form-control" placeholder="Votre commentaire:" maxlength="2000" name="text" cols="50" rows="10" id="newComment"></textarea>
+      <textarea class="form-control" placeholder="Votre commentaire:" maxlength="2000" name="text" cols="50" rows="10" id="textComment"></textarea>
       <span class="hint" id="textarea_message"></span>
 
       <div class="float-right">
@@ -170,7 +173,7 @@
 
       </textarea>
 
-      <span class="hint" id="textarea_message"></span>
+      <span class="hint" id="textarea_messageAnswer"></span>
 
       <div class="float-right">
         <input class="btn btn-primary pull-right" type="submit" value="Envoyer !">
