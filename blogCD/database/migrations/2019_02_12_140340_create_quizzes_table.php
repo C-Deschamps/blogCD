@@ -18,6 +18,7 @@ class CreateQuizzesTable extends Migration
             $table->string('name');
             $table->integer('idUser');
             $table->integer('nbrQuestion');
+
             $table->timestamps();
 
             $table->foreign('idUser')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');

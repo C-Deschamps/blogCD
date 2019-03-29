@@ -60,11 +60,15 @@ Route::get('/userInfo/{idUser}', 'HomeController@showUserInfo');
 Route::post('/nav/{id}', 'CommentsController@navPost');
 Route::post('/newComment/{id}', 'CommentsController@newCommentPost');
 
-Route::get('/admin/createQuizz', function () {
+Route::get('/createQuizz', function () {
     return view('admin.createQuizz');
 });
 
 Route::post('/postQuizz', 'QuizController@postQuizz');
 
 Route::get('/quizz', 'QuizController@show');
-Route::get('/showQuizz/{id}', 'QuizController@showOne');
+Route::get('/showQuizz/{id}/{idQuestion}', 'QuizController@showOne');
+
+Route::post('/postQt/{id}/{idQuestion}', 'PossibilitesController@postQt');
+
+Route::get('/correction/{idQuizz}', 'PossibilitesController@correction');

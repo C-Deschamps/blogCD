@@ -20,7 +20,9 @@ class CreatePossibilitesTable extends Migration
             $table->text('reponse');
             $table->boolean('isRight');
             $table->integer('NumQuestion');
+
             $table->string('picture')->nullable();
+            $table->text('description')->nullable();
 
             $table->integer('idQuizz');
             $table->timestamps();

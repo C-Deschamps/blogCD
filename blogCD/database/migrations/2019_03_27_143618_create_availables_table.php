@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateReponsesTable extends Migration
+class CreateAvailablesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,15 @@ class CreateReponsesTable extends Migration
      */
     public function up()
     {
-        Schema::create('reponses', function (Blueprint $table) {
+        Schema::create('availables', function (Blueprint $table) {
             $table->increments('id');
-
-            $table->integer('numQuestion');
+            $table->boolean('available')->default(1);
             $table->integer('idQuizz');
-            $table->integer('idUser');
-            $table->boolean('isRight');
-            $table->integer('idPossibilites')->nullable();
-            $table->string('reponseSimple')->nullable();
-            $table->integer('numTentative')->default(null)->nullable();
+            $table->integer('idUser')->default(null)->nullable();
             $table->timestamps();
 
             $table->foreign('idQuizz')->references('id')->on('quizzes')->onDelete('restrict')->onUpdate('restrict');
             $table->foreign('idUser')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
-            $table->foreign('idPossibilites')->references('id')->on('possibilites')->onDelete('restrict')->onUpdate('restrict');
         });
     }
 
@@ -38,6 +32,6 @@ class CreateReponsesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('reponses');
+        Schema::dropIfExists('availables');
     }
 }

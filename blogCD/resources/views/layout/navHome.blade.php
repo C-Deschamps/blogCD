@@ -23,7 +23,7 @@
           </li>
           @auth
           <li class="nav-item">
-            <a class="nav-link animsition-link" href="/admin/createQuizz" >Créer un quizz</a>
+            <a class="nav-link animsition-link" href="/createQuizz" >Créer un quizz</a>
           </li>
           @endauth
           <li class="nav-item">

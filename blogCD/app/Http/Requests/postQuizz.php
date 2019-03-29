@@ -27,6 +27,7 @@ class postQuizz extends FormRequest
     {
         return [
             'title' => 'required|max:50'
+
         ];
     }
 }

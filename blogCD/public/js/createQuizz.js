@@ -1,11 +1,11 @@
 
 document.getElementsByName('numberQt')[0].onchange = function() {
-  var nbrQt = this.value;
-  var nbrTwo = nbrQt;
-  nbrTwo ++;
+ var nbrQt = this.value;
+ var nbrTwo = nbrQt;
+ nbrTwo ++;
 
 
-  for (var j = nbrTwo; j <= 40; j++) {
+ for (var j = nbrTwo; j <= 40; j++) {
 
    document.getElementById('question' + j).style.display = 'none';
 
@@ -67,10 +67,18 @@ document.getElementById(i + 'numberAnswer').onchange = function() {
 
       document.getElementById('qcmAnswer' + j + k).style.display = 'block';
    }
-// fonction qui determine le max de reponses possible en fonction des possibilité
 
+// fonction qui determine le max de reponses possible en fonction des possibilité
 var rep2 = document.getElementById(j + 'numberRightAnswer');
 rep2.setAttribute("max", nbrAnswer);
+
+for (var l= 1; l<=8; l++) {
+
+   p = document.getElementById(j + 'answerRightQcm' + l);
+
+  p.setAttribute("max", nbrAnswer);
+}
+
 }
 
 document.getElementById(i + 'numberRightAnswer').onchange = function() {

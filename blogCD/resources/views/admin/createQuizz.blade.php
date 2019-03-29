@@ -19,13 +19,13 @@
           {!! Form::open(array('action' => 'QuizController@postQuizz', 'files' => true)) !!}
           <div class="form-group {!! $errors->has('title') ? 'has-error' : '' !!}">
             {!! Form::text('title', null, ['class' => 'form-control', 'placeholder' => 'Le nom du quizz']) !!}
-            {!! $errors->first('title', '<small class="help-block">:message</small>') !!}
+            {!! $errors->first('title', '<small class="help-block" style="color: red;">:message</small>') !!}
           </div>
 
           {!! Form::label('numberQT', 'Nombre de questions :') !!}
           <div class="form-group {!! $errors->has('numberQt') ? 'has-error' : '' !!}">
 
-            {!! Form::number('numberQt', 1, ['class' => 'form-control', 'min' => 1, 'id' => 'nbrQt' ]) !!}
+            {!! Form::number('numberQt', 0, ['class' => 'form-control', 'min' => 1, 'id' => 'nbrQt', 'max' => 40 ]) !!}
 
             {!! $errors->first('numberQt', '<small class="help-block">:message</small>') !!}
           </div>
@@ -57,7 +57,7 @@
 
             <div class="form-group {!! $errors->has($i .'_image') ? 'has-error' : '' !!}" id="picture{!! $i !!}" style="display: none;">
 
-              {!! Form::file($i .'_image', ['class' => 'form-control']) !!}
+              {!! Form::file($i .'_image', ['class' => 'form-control', 'accept' => 'image/*']) !!}
               {!! $errors->first($i .'_image', '<small class="help-block">:message</small>') !!}
             </div>
 
@@ -106,7 +106,7 @@
                 @for ($j = 1; $j <= 8 ; $j ++)
                 <div class="col-md-3" style="display: none;" id="qcmRightAnswer{!! $i . $j !!}">
                   {!! Form::label($i . 'answerRightQcm' . $j, 'Réponse juste n°' . $j) !!}
-                  {!! Form::number($i . 'answerRightQcm' . $j, null, ['class' => 'form-control']) !!}
+                  {!! Form::number($i . 'answerRightQcm' . $j, null, ['class' => 'form-control', 'min' => 1, 'max' => 1]) !!}
                   {!! $errors->first($i . 'answerRightQcm' . $j, '<small class="help-block">:message</small>') !!}
                 </div>
                 @endfor

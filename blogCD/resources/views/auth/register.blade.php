@@ -67,7 +67,7 @@
                             <label for="photo" class="col-md-4 col-form-label text-md-right">Insérer une photo de profil (Optionel)</label>
 
                             <div class="col-md-6">
-                                <input class="form-control{{ $errors->has('photo') ? ' is-invalid' : '' }}" name="photo" type="file">
+                                <input class="form-control{{ $errors->has('photo') ? ' is-invalid' : '' }}" name="photo" type="file" accept="image/*">
                                 @if ($errors->has('photo'))
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $errors->first('photo') }}</strong>

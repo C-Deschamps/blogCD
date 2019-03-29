@@ -18,6 +18,7 @@ class CreateScoresTable extends Migration
             $table->integer('idUser');
             $table->integer('idQuizz');
             $table->integer('score');
+            $table->integer('nbrTentative');
             $table->timestamps();
 
             $table->foreign('idUser')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
