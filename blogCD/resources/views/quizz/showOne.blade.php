@@ -8,6 +8,8 @@
 
 @section('contenu')
 
+
+
 <div class="container">
     <div class="privew">
         <div class="questionsBox">
@@ -131,7 +133,7 @@
         Finir le quizz
          </button> {{-- Le bouton final de fin de quizz --}}
         @endif
-         <button type="submit" class="button" name="submitbutton" value="prevQt">>></button>
+         <button type="button" class="button" name="showNav" id="showNav" value="prevQt">>></button>
         <span>{{ $questions[0]->NumQuestion }}/{{ $quizz->nbrQuestion }}</span>
     </div>
     <!-- Modal -->
@@ -159,8 +161,57 @@
 </div>
 </div>
 </div>
+
+<div class="sidebar-overlay none hide">
+</div>
+
+<div class="sidebar-wrapper hide">
+    <div class="card">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a class="nav-link active" href="#" id="sidebar-allQst"><i class="fas fa-list" ></i> Toutes les questions</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="sidebar-unansweredQst"><i class="fas fa-times" style="color: red;"></i> Pas répondu</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="sidebar-answerQst"><i class="fas fa-check" style="color: green;"></i> répondu</a>
+      </li>
+    </ul>
+  </div>
+  <div class="card-body" id="allQst">
+    <div class="sidebar-list">
+        @foreach ($allQuestions as $qst)
+
+        <div>
+            <a href="/showQuizz/{{ $quizz->id }}/{{$qst->NumQuestion }}" class="sidebar-one">
+                <input type="button" name="{{$qst->NumQuestion }}" class="sidebar-number" value="{{$qst->NumQuestion }}"></input>
+                <span class="sidebar-titleQst" style="color: rgb(0, 0, 0);font-size: ">{{$qst->title }}</span>
+            </a>
+        </div>
+        @endforeach
+
+    </div>
+  </div>
+
+  <div class="card-body none" id="unansweredQst">
+    <h5 class="card-title">2</h5>
+    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+
+  <div class="card-body none" id="answerQst">
+    <h5 class="card-title">3</h5>
+    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+  </div>
+</div>
+
 @endsection
 
 @section('script')
 @include('layout.script')
+  <script src="{{ URL::asset('js/showOneQuizz.js') }}"></script>
 @endsection

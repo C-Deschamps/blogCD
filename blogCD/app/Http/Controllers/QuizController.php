@@ -159,6 +159,17 @@ class QuizController extends Controller
    $user = Auth::user();
    $userId = $user->id;
 
+   // Pour la sidebar
+  $allQuestions = Possibilites::where('idQuizz', '=', $idQuizz)->get();
+  $allQuestions = $allQuestions->unique('NumQuestion');
+  $allQuestionsArray = $allQuestions->toArray();
+  $allQuestionsRep = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', null)->where('reponseSimple', '!=', null)->orWhere('idPossibilites', '!=', null)->get(); //recup les reponse qui ont été entré
+  PLUCK
+    $allQuestionsRep = $allQuestionsRep->unique('numQuestion');
+    $allQuestionsRepArray = $allQuestionsRep->toArray();
+    $allQuestionsNoRep = array_diff($allQuestionsArray, $allQuestionsRepArray);
+    return $allQuestionsNoRep;
+
 // On check si le user a deja répondu ou pas a cette question
    if(isset($_SESSION['newTentative'])){ //Si le user a cliquer sur newTentative
    if ($_SESSION['newTentative'] != 0) {
@@ -187,7 +198,7 @@ unset($_SESSION['newTentative']);
    //$picture ="'" . $questions[0]->picture . "'";
 
   $picture = $questions[0]->picture;
-  return view('quizz.showOne', compact('questions', 'quizz', 'reponse', 'repQCM', 'picture'));
+  return view('quizz.showOne', compact('questions', 'quizz', 'reponse', 'repQCM', 'picture', 'allQuestions'));
 }
 
 // Fonction qui permet de vérifier si une photo est tjr utilisé et la supprime sinon

@@ -227,3 +227,72 @@ input[type=checkbox], input[type=radio] {
   background-color: #5bc0de;
 }
 
+/*LE sidebar */
+
+.sidebar-overlay {
+  z-index: 10;
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100%;
+  left: 0%;
+  top: 0%;
+  background: rgba(0, 0, 0, 0.5);
+  transition: 0.4s opacity;
+}
+
+.sidebar-wrapper {
+  top: -95px;
+  display: block;
+  position: absolute;
+  right: 0;
+  width: 35%;
+  height: 100vh;
+  background: white;
+  z-index: 12;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  transition: 0.4s margin;
+}
+
+.sidebar-overlay.hide { opacity: 0; }
+.sidebar-overlay.none { display: none; }
+.sidebar-wrapper.hide { margin-right: -35%; }
+
+.card-body.none { display: none; }
+
+.sidebar-number {
+    margin: 5px !important;
+    width: 35px;
+    height: 35px;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 0.5px solid #e0e0e0;
+   font-weight: bold;
+}
+.sidebar-number.right {
+    background: #00c851 !important;
+    color: #fff;
+}
+.sidebar-number.false {
+    background: #f35f5d !important;
+    color: #fff;
+}
+.sidebar-list {
+    padding: 6px;
+    width: 100% !important;
+    float: left;
+    overflow-x: auto;
+    padding: 5px;
+}
+.sidebar-one {
+  display: inline;
+}
+
+.sidebar-titleQst{
+  font-size: 140%;
+
+}
+.sidebar-titleQst:hover {
+  font-weight: bold;
+  color: #3b5998;
+}
