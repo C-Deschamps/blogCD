@@ -28,10 +28,7 @@
                <tr class="d-flex">
                   <td class="col-3 ">{{ $quiz->autheur }}</td>
 
-
-                  <th class="col-7 caption" >Vous avez déja fait ce quizz</th>
-
-                  <th class="col-7 "><a href="#" class="isDisabled" id="user" data-toggle="modal" data-target="#exampleModal">{{ $quiz->name }} </a></th>
+                  <th class="col-7 "><a href="#" class="isDisabled" id="user" data-toggle="modal" data-target="#exampleModal{{ $quiz->id }}">{{ $quiz->name }} </a> </th>
                   <td class="col-2 no-hover"> {{ $quiz->nbrQuestion }}</td>
                    </tr>
 
@@ -52,11 +49,12 @@
 
                   <td class="col-2"> {{ $quiz->nbrQuestion }}</td>
 
+
                </tr>
                   @endif
 
 
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal{{ $quiz->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -70,7 +68,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Retour aux quizz</button>
-         <a href="/showQuizz/{{ $quiz->id }}/1" class="btn btn-danger btn-sm">Démarrer une nouvelle tentative</a>
+         <a href="/newTentative/{{ $quiz->id }}" class="btn btn-danger btn-sm">Démarrer une nouvelle tentative</a>
       </div>
     </div>
   </div>

@@ -25,6 +25,7 @@
   <link href="{{ URL::asset('css/showQuizz.css') }}" rel="stylesheet">
   <link href="{{ URL::asset('css/correction.css') }}" rel="stylesheet">
   <link href="{{ URL::asset('css/listQuizz.css') }}" rel="stylesheet">
+  <link href="{{ URL::asset('css/corrigeOne.css') }}" rel="stylesheet">
 
   <!-- animsition.css -->
   <link rel="stylesheet" href="{{ URL::asset('css/animsition.min.css') }}">

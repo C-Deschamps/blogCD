@@ -72,7 +72,7 @@
             {{-- Reponse du Bool --}}
             <div class="form-group {!! $errors->has('answerBool' . $i) ? 'has-error' : '' !!}" style="display: none;" id="bool{!! $i !!}">
               {!! Form::label('answerBool' . $i, 'La réponse attendue :') !!}
-              {!! Form::select('answerBool' . $i, array('True' => 'Vrai', 'False' => 'Faux'), ['class' => 'form-control']) !!}
+              {!! Form::select('answerBool' . $i, array('true' => 'Vrai', 'false' => 'Faux'), ['class' => 'form-control']) !!}
 
               {!! $errors->first('answerBool' . $i, '<small class="help-block">:message</small>') !!}
             </div>

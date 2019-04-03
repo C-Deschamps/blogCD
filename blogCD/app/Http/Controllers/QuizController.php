@@ -151,6 +151,8 @@ class QuizController extends Controller
 
 //affiche une question du quizz
   public function showOne($idQuizz, $numQuestion) {
+    session_start();
+
    $quizz = quiz::where('id', '=', $idQuizz)->first();
    $questions = Possibilites::where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->get();
    $picture = array();
@@ -158,13 +160,30 @@ class QuizController extends Controller
    $userId = $user->id;
 
 // On check si le user a deja répondu ou pas a cette question
-   $reponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->get();
+   if(isset($_SESSION['newTentative'])){ //Si le user a cliquer sur newTentative
+   if ($_SESSION['newTentative'] != 0) {
+    $maxTent = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->orderBy('numTentative', 'dsc')->first();
+    $maxTent = $maxTent->numTentative;
+    $reponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', $maxTent)->get();
    $i = 0;
    $repQCM = array();
    foreach ($reponse as $rep) {
     $repQCM[$i] = $rep->idPossibilites;
     $i++;
   }
+   }
+unset($_SESSION['newTentative']);
+ } else //on recup les reponse normal
+ {
+  $reponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', null)->get();
+  $i = 0;
+   $repQCM = array();
+   foreach ($reponse as $rep) {
+    $repQCM[$i] = $rep->idPossibilites;
+    $i++;
+  }
+ }
+
    //$picture ="'" . $questions[0]->picture . "'";
 
   $picture = $questions[0]->picture;
@@ -177,6 +196,12 @@ public function isUse(){
 
 }
 
+public function newTentative($idQuizz) {
+session_start();
+
+ $_SESSION['newTentative'] = 0;
+ return redirect()->action('QuizController@showOne', [$idQuizz, '1']);
+}
 
 public function resize_image($file, $w, $h, $crop=FALSE) {
   list($width, $height) = getimagesize($file);
@@ -204,4 +229,6 @@ public function resize_image($file, $w, $h, $crop=FALSE) {
 
   return $dst;
 }
+
+
 }

@@ -16,6 +16,7 @@ class PossibilitesController extends Controller
  public function postQt(Request $request, $idQuizz, $numQuestion) {
    $inputs = $request->all();
    $final = 'false';
+   $forceCorrec = 0;
 
       $question = Possibilites::where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->first();
       $user = Auth::user();
@@ -36,18 +37,23 @@ class PossibilitesController extends Controller
       // return $inputs;
       unset($inputs['_token']); //on enleve le token et la valeur du submit button
       unset($inputs['submitbutton']);
-
+      if (!isset($inputs['reponseSimple'])) { //si le reponse = null on le supprime
+          unset($inputs['reponseSimple']);
+      }
       $reponse['idUser'] = $userId;
       $reponse['numQuestion'] = $numQuestion;
       $reponse['idQuizz'] = $idQuizz;
 
       $arrayKey = array_keys($inputs); //On récupère les keys de inputs, ce qui correspond aux id des possibilités choisis
 
-      $isReponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->get();
+      $isReponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', null)->get();
 
+      $array_vide = array();
 
-      if ($inputs != '[]') { //on verifie si le user à rentrer de nvelles données
-       if ($isReponse != '[]' ) { //Fonction qui va update les réponse déja existantes
+      if ($inputs != $array_vide) { //on verifie si le user à rentrer de nvelles données
+        //Si il existe deja une réponse
+
+       if (isset($isReponse[0]) ) { //Fonction qui va update les réponse déja existantes
 
          if ($question->type == 'QCM'){ //Pour un qcm, on supprime les reponses existantes pour enregistrer les nouvelles
             $delete = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->delete();
@@ -65,26 +71,26 @@ class PossibilitesController extends Controller
          if ($question->type == 'Bool') {
             $isRight = PossibilitesController::isRight($idQuizz, $numQuestion, $inputs[$arrayKey[0]]);
 
-            $update = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->update(['reponseSimple' => $inputs[$arrayKey[0]], 'isRight' => $isRight]);
+            $update = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', null)->update(['reponseSimple' => $inputs[$arrayKey[0]], 'isRight' => $isRight]);
 
          }
          if ($question->type == 'Simple') {
 
             $isRight = PossibilitesController::isRight($idQuizz, $numQuestion, $inputs[$arrayKey[0]]);
 
-            $update = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->update(['reponseSimple' => $inputs[$arrayKey[0]], 'isRight' => $isRight]);
+            $update = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', null)->update(['reponseSimple' => $inputs[$arrayKey[0]], 'isRight' => $isRight]);
 
          }
 
+
             if ($final == 'true') { //SI c'est la dernière question alors on valide et corrige le quizz
-      return redirect()->action('PossibilitesController@correction', [$idQuizz, $numTentative]);
+      return redirect()->action('PossibilitesController@correction', [$idQuizz, $forceCorrec]);
    }
          return redirect()->action('QuizController@showOne', [$idQuizz, $numNext]);
    }
+    else { //si il nya pas de rep existante
 
-}
-      // Pour le qcm :
-      if ($question->type == 'QCM'){
+ if ($question->type == 'QCM'){
         $nbArray = count(array_keys($inputs));
 
         for ($i = 0 ; $i < $nbArray; $i++) {
@@ -113,17 +119,45 @@ class PossibilitesController extends Controller
    }
 
    if ($final == 'true') { //SI c'est la dernière question alors on valide et corrige le quizz
-      return redirect()->action('PossibilitesController@correction', $idQuizz);
+      return redirect()->action('PossibilitesController@correction', [$idQuizz, $forceCorrec]);
    }
 
    return redirect()->action('QuizController@showOne', [$idQuizz, $numNext]);
+
+   }
+  }
+
+ else {  // Si le inputs est vide
+
+$reponse['isRight'] = 0;
+   $repExist = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where([
+         ['idPossibilites', '=', null],
+         ['reponseSimple', '=', null],
+         ['numTentative', '=', null],
+      ])->get();
+
+   if (!isset($repExist[0])) { //si ya deja une rep vide pour cette question
+    $create = Reponses::create($reponse);
+    $create->save();
+   }
+   if ($final == 'true') {
+    return redirect()->action('PossibilitesController@correction', [$idQuizz, $forceCorrec]);
+   }
+
+     return redirect()->action('QuizController@showOne', [$idQuizz, $numNext]);
 }
 
-public function correction($idQuizz) {
+}
+
+public function correction($idQuizz, $forceCorrec) {
       $user = Auth::user();
       $userId = $user->id;
       $userName = $user->name;
       $scoreQuizz = 0;
+      $question = array();
+      $n = 0;
+
+
 
       $poss = Possibilites::where('idQuizz', '=', $idQuizz)->where('type', '=', 'QCM')->where('isRight', '=', 1)->orderBy('NumQuestion', 'asc')->get();
        foreach ($poss as $pos) { //On détermine le nombre de reponse juste par qcm
@@ -135,6 +169,24 @@ public function correction($idQuizz) {
             }
            }
         }
+        if ($forceCorrec == 0) { //SI le user n'a pas forcer la correction
+
+        $qstNoFait = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numTentative', '=', null)->where([
+         ['idPossibilites', '=', null],
+         ['reponseSimple', '=', null],
+      ])->orderBy('numQuestion', 'asc')->get(); //query qui recupère les reponse qui n'ont pas de rep
+
+        $qstNoFait = $qstNoFait->unique('numQuestion'); //enleve les doublons
+
+       if ($qstNoFait != '[]'){
+          foreach ($qstNoFait as $qst) {
+          $listNoRep[$n] = $qst->numQuestion; //array qui contient le num des question pas fait
+          $n ++;
+       }
+
+       return view('quizz.nonTraite', compact('listNoRep', 'idQuizz'));
+       }
+       }
 
 
       $scores = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('isRight', '=', 1)->where('numTentative', '=', null)->orderBy('numQuestion', 'asc')->get();
@@ -178,21 +230,26 @@ public function correction($idQuizz) {
 
 
       //update du nombre de tentative
-      $nbrTent = scores::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->first();
+      $nbrTent = scores::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->orderBy('numTentative', 'dsc')->first();
+
       if ($nbrTent != null) {
-         $nbrTentative = $nbrTent->nbrTentative;
+         $nbrTentative = $nbrTent->numTentative;
+
          $nbrTentative ++;
-         $update = scores::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->update(['nbrTentative' => $nbrTentative]);
+
       } else {
          $nbrTentative = 1;
-         $scoreFinal['score'] = $nbrTentative;
+
       }
 
-
+      $scoreFinal['numTentative'] = $nbrTentative;
       $create = scores::create($scoreFinal);
       $create->save();
 
+
+
       $repUpdate = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', null)->update(['numTentative' => $nbrTentative]);
+
       //Passage du quizz en unavailable
       $isAvailable = available::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->first();
       if ($isAvailable != null) {
@@ -203,10 +260,32 @@ public function correction($idQuizz) {
          $available['idUser'] = $userId;
          $create = available::create($available);
       }
-      $nbrQst = quiz::where('id', '=', $idQuizz)->first();
-      $nbrQst = $nbrQst->nbrQuestion;
-      return view('quizz.correction', compact('scoreQuizz', 'userName', 'nbrTent', 'nbrQst'));
 
+
+
+
+      return redirect()->action('PossibilitesController@showCorrection', $idQuizz);
+
+}
+
+public function showCorrection($idQuizz) {
+  $user = Auth::user();
+  $userId = $user->id;
+  $userName = $user->name;
+
+  $maxTent = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->orderBy('numTentative', 'dsc')->first();
+  $maxTent = $maxTent->numTentative;
+
+  $allRep = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', $maxTent)->get();
+  $scores = scores::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', $maxTent)->first();
+
+  $scoreQuizz = $scores->score;
+  $nbrTentative = $scores->numTentative;
+
+  $nbrQst = quiz::where('id', '=', $idQuizz)->first();
+  $nbrQst = $nbrQst->nbrQuestion;
+
+return view('quizz.correction', compact('scoreQuizz', 'userName', 'nbrTentative', 'nbrQst', 'allRep'));
 }
 
 public function isRight($idQuizz, $numQuestion, $reponse) { //Fonction qui va comparer le résultatUser avec le bon résultat

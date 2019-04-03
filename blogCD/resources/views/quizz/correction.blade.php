@@ -20,17 +20,33 @@
              <span></span>
           </div>
           <div class="ends">
-             <strong>Nombre de tentative : </strong> {{ $nbrTent }}
+             <strong>Nombre de tentative : </strong> {{ $nbrTentative }}
           </div>
        </div>
 
-       <div class="stats">
-
-        <div>
-          <strong>INVITED</strong> 3098
-       </div>
-
        <div>
+        <?php $i = 0; ?>
+         @foreach ($allRep as $rep)
+         <?php $j = $i % 4 ?>
+         @if ($j == 0 ) {{-- permet de faire 3 par ligne --}}
+         </div>
+         <div class="stats">
+         @endif
+
+        @if ($rep->isRight == 0) {{-- Si la reponde est fausse --}}
+        <div style="background-color: red;">
+          <strong></strong><a href="/corrigeOne/{{ $rep->idQuizz}}/{{ $rep->numQuestion }}/{{ $nbrTentative }}" style="color: black;">{{ $rep->numQuestion }}</a>
+       </div>
+        @else
+        <div style="background-color: green;">
+          <strong></strong><a href="/corrigeOne/{{ $rep->idQuizz}}/{{ $rep->numQuestion }}/{{ $nbrTentative }}" style="color: black;">{{ $rep->numQuestion }}</a>
+       </div>
+        @endif
+
+        <?php $i ++; ?>
+        @endforeach
+      </div>
+       {{-- <div>
           <strong>JOINED</strong> 562
        </div>
 
@@ -70,7 +86,7 @@
     <strong>DECLINED</strong> 182
  </div>
 
-</div>
+</div> --}}
 
 <div class="footer">
   <a href="#" class="Cbtn Cbtn-primary">View</a>

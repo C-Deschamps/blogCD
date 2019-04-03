@@ -28,8 +28,10 @@
                     @if($questions[0]->type == 'QCM')
                     @foreach($questions as $question)
                     <div class="funkyradio-primary">
+                        @if (isset($repQCM))
                         @if (in_array($question->id, $repQCM))
                         <input type="checkbox" name="{{ $question->id}}" id="radio{{ $question->id}}" checked />
+                        @endif
                         @else
                         <input type="checkbox" name="{{ $question->id}}" id="radio{{ $question->id}}" />
                         @endif
@@ -46,7 +48,7 @@
                     @if($reponse[0]->reponseSimple == 'true')
                     <div class="funkyradio-info">
 
-                       <input type="radio" name="{{ $questions[0]->id}}" id="radio{{ $questions[0]->id}}" value="true" checked/>
+                       <input type="radio" name="{{ $questions[0]->id}}" id="radio{{ $questions[0]->id}}" value="true" checked />
                         <label for="radio{{ $questions[0]->id}}">Vrai</label>
                     </div>
 
@@ -117,18 +119,19 @@
 
     <div class="questionsRow">
         @if($questions[0]->NumQuestion != 1)
-        <button type="submit" class="button" name="submitbutton" value="prevQt">Précédent</button>
+        <button type="submit" class="button" name="submitbutton" value="prevQt"><</button>
         @else
-        <button type="submit" class="button" name="submitbutton" style="opacity: 0;" disabled>Précédent</button>
+        <button type="submit" class="button" name="submitbutton" style="opacity: 0;" disabled><</button>
         @endif
         @if($questions[0]->NumQuestion != $quizz->nbrQuestion)
-        <button type="submit" class="button" name="submitbutton" value="nextQt">Suivant</button>
+        <button type="submit" class="button" name="submitbutton" value="nextQt">></button>
         @else
 
          <button type="button" class="button" data-toggle="modal" data-target="#exampleModalCenter">
         Finir le quizz
          </button> {{-- Le bouton final de fin de quizz --}}
         @endif
+         <button type="submit" class="button" name="submitbutton" value="prevQt">>></button>
         <span>{{ $questions[0]->NumQuestion }}/{{ $quizz->nbrQuestion }}</span>
     </div>
     <!-- Modal -->

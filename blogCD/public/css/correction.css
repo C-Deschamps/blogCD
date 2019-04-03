@@ -1,6 +1,10 @@
 /* Reset & General
 ---------------------------------------------------------------------- */
 
+.corrigeCase {
+
+}
+
 
 
 .tile{
@@ -74,12 +78,13 @@
 }
 .stats div{
    border-right:1px solid #ebeff2;
-   width: 33.33333%;
+   width: 25%;
    float:left;
-   text-align:center
+   text-align:center;
+   padding: 20px;
 }
 
-.stats div:nth-of-type(3){border:none;}
+.stats div:nth-of-type(4){border:none;}
 
 div.footer {
    text-align: right;
