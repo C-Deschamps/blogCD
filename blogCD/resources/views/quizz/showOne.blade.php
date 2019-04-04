@@ -31,9 +31,11 @@
                     @foreach($questions as $question)
                     <div class="funkyradio-primary">
                         @if (isset($repQCM))
-                        @if (in_array($question->id, $repQCM))
+                            @if (in_array($question->id, $repQCM))
                         <input type="checkbox" name="{{ $question->id}}" id="radio{{ $question->id}}" checked />
-                        @endif
+                             @else
+                         <input type="checkbox" name="{{ $question->id}}" id="radio{{ $question->id}}" />
+                             @endif
                         @else
                         <input type="checkbox" name="{{ $question->id}}" id="radio{{ $question->id}}" />
                         @endif
@@ -168,15 +170,15 @@
 <div class="sidebar-wrapper hide">
     <div class="card">
   <div class="card-header">
-    <ul class="nav nav-tabs card-header-tabs">
+    <ul class="nav nav-tabs card-header-tabs sidebar-nav">
       <li class="nav-item">
-        <a class="nav-link active" href="#" id="sidebar-allQst"><i class="fas fa-list" ></i> Toutes les questions</a>
+        <a class="nav-link active" href="#" id="sidebar-allQst"><i class="fas fa-list" ></i> Toutes les questions ({{ $allCount }})</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#" id="sidebar-unansweredQst"><i class="fas fa-times" style="color: red;"></i> Pas répondu</a>
+        <a class="nav-link" href="#" id="sidebar-unansweredQst"><i class="fas fa-times" style="color: red;"></i> Pas répondu ({{ $noRepCount }})</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#" id="sidebar-answerQst"><i class="fas fa-check" style="color: green;"></i> répondu</a>
+        <a class="nav-link" href="#" id="sidebar-answerQst"><i class="fas fa-check" style="color: green;"></i> répondu ({{ $repCount }})</a>
       </li>
     </ul>
   </div>
@@ -196,15 +198,37 @@
   </div>
 
   <div class="card-body none" id="unansweredQst">
-    <h5 class="card-title">2</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+        <div class="sidebar-list">
+    @if ($isNoAnswer == 'true') {{-- S'il existe des reponse --}}
+        @foreach ($allQuestionsNoRep as $qstNo)
+        <div>
+            <a href="/showQuizz/{{ $quizz->id }}/{{$qstNo->NumQuestion }}" class="sidebar-one">
+                <input type="button" name="{{$qstNo->NumQuestion }}" class="sidebar-number" value="{{$qstNo->NumQuestion }}"></input>
+                <span class="sidebar-titleQst" style="color: rgb(0, 0, 0);font-size: ">{{$qstNo->title }}</span>
+            </a>
+        </div>
+        @endforeach
+    @endif
+    </div>
+
   </div>
 
   <div class="card-body none" id="answerQst">
-    <h5 class="card-title">3</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+     <div class="sidebar-list">
+    @if ($isAnswer == 'true')
+        @foreach ($allQuestionsRep as $qstRep)
+
+        <div>
+            <a href="/showQuizz/{{ $quizz->id }}/{{$qstRep->NumQuestion }}" class="sidebar-one">
+                <input type="button" name="{{$qstRep->NumQuestion }}" class="sidebar-number" value="{{$qstRep->NumQuestion }}"></input>
+                <span class="sidebar-titleQst" style="color: rgb(0, 0, 0);font-size: ">{{$qstRep->title }}</span>
+            </a>
+        </div>
+        @endforeach
+    @endif
+    </div>
+
+
   </div>
   </div>
 </div>

@@ -10,6 +10,7 @@ use App\Possibilites;
 use App\User;
 use App\Reponses;
 use App\available;
+use DB;
 
 class QuizController extends Controller
 {
@@ -27,8 +28,8 @@ class QuizController extends Controller
    $idQuizz = $create['id'];
    $available['idQuizz'] = $idQuizz;
 
-    $availableCreate = available::create($available);
-    $availableCreate->save();
+   $availableCreate = available::create($available);
+   $availableCreate->save();
    for ($i = 1; $i <= $nbrQt; $i++){
 
     $qt_type = $inputs[$i . 'typeQt'];
@@ -117,6 +118,8 @@ class QuizController extends Controller
    }
 //affiche le tableau des quizz
    public function show(){
+    //recup les tentative à null et les supprimes
+    $deleteNull = Reponses::where('numTentative', null)->delete();
      $quizz = quiz::all();
      $user = Auth::user();
      $currentUserid = $user->id;
@@ -134,9 +137,9 @@ class QuizController extends Controller
       if ($available->available == 1) {
         $quiz->available = 'true';
         if ($userAvailable != null && $userAvailable->available == 0) {
-            $quiz->available = 'user_down';
+          $quiz->available = 'user_down';
+        }
       }
-    }
       else {
         $quiz->available = 'admin_down';
       }
@@ -153,52 +156,88 @@ class QuizController extends Controller
   public function showOne($idQuizz, $numQuestion) {
     session_start();
 
-   $quizz = quiz::where('id', '=', $idQuizz)->first();
-   $questions = Possibilites::where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->get();
-   $picture = array();
-   $user = Auth::user();
-   $userId = $user->id;
+    $quizz = quiz::where('id', '=', $idQuizz)->first();
+    $questions = Possibilites::where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->get();
+    $picture = array();
+    $user = Auth::user();
+    $userId = $user->id;
 
    // Pour la sidebar
-  $allQuestions = Possibilites::where('idQuizz', '=', $idQuizz)->get();
-  $allQuestions = $allQuestions->unique('NumQuestion');
-  $allQuestionsArray = $allQuestions->toArray();
-  $allQuestionsRep = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', null)->where('reponseSimple', '!=', null)->orWhere('idPossibilites', '!=', null)->get(); //recup les reponse qui ont été entré
-  PLUCK
-    $allQuestionsRep = $allQuestionsRep->unique('numQuestion');
-    $allQuestionsRepArray = $allQuestionsRep->toArray();
-    $allQuestionsNoRep = array_diff($allQuestionsArray, $allQuestionsRepArray);
-    return $allQuestionsNoRep;
+    $isAnswer = 'true';
+    $isNoAnswer = 'true';
+    $allQuestions = Possibilites::where('idQuizz', '=', $idQuizz)->get();
+    $allQuestions = $allQuestions->unique('NumQuestion');
+    $allQuestionsArray = $allQuestions->toArray();
+    $allCount = count($allQuestionsArray);
 
-// On check si le user a deja répondu ou pas a cette question
-   if(isset($_SESSION['newTentative'])){ //Si le user a cliquer sur newTentative
-   if ($_SESSION['newTentative'] != 0) {
-    $maxTent = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->orderBy('numTentative', 'dsc')->first();
-    $maxTent = $maxTent->numTentative;
-    $reponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', $maxTent)->get();
-   $i = 0;
-   $repQCM = array();
-   foreach ($reponse as $rep) {
-    $repQCM[$i] = $rep->idPossibilites;
-    $i++;
-  }
-   }
-unset($_SESSION['newTentative']);
- } else //on recup les reponse normal
- {
-  $reponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', null)->get();
-  $i = 0;
-   $repQCM = array();
-   foreach ($reponse as $rep) {
-    $repQCM[$i] = $rep->idPossibilites;
-    $i++;
-  }
+  $allQuestionsRepArray = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', null)->where(function ($q) {
+    $q->where('reponseSimple', '!=', null)->orWhere('idPossibilites', '!=', null); //utilisation de fct dans un where pour utiliser le orWhere parafitement
+  })->orderBy('numQuestion', 'asc')->pluck('numQuestion'); //recup les reponse qui ont été entré
+ $allQuestionsRepArray;
+    $allQuestionsRepArray = $allQuestionsRepArray->toArray();//transformation en array ...
+    $allQuestionsRepArray = array_unique($allQuestionsRepArray); //... permet d'utiliser cette fct
+
+
+
+
+    if (!empty($allQuestionsRepArray)) { //SI le user a deja repondu a des questions
+
+      $allQuestionsNoRepArray = DB::table('Possibilites')->where('idQuizz', '=', $idQuizz)->whereNotIn('NumQuestion', $allQuestionsRepArray)->orderBy('numQuestion', 'asc')->pluck('NumQuestion');
+      $allQuestionsNoRepArray = $allQuestionsNoRepArray->toArray();
+
+      if (!empty($allQuestionsNoRepArray)) { //si le user n'as pas répondu a toute les questions
+
+    $allQuestionsNoRepArray = array_unique($allQuestionsNoRepArray); //... permet d'utiliser cette fct
+
+        $r = 0;
+        foreach ($allQuestionsNoRepArray as $noRep) {
+          $allQuestionsNoRep[$r] = DB::table('Possibilites')->where('idQuizz', '=', $idQuizz)->where('NumQuestion', '=', $noRep)->first();
+          $r ++;
+        }
+
+
+    $n = 0;
+    foreach ($allQuestionsRepArray as $rep) {
+      $allQuestionsRep[$n] = Possibilites::where('idQuizz', '=', $idQuizz)->where('NumQuestion', '=', $rep)->first();
+      $n ++;
+    }
+
+    $repCount = count($allQuestionsRepArray);
+    $noRepCount = count($allQuestionsNoRepArray);
+
+  } else {
+   $allQuestionsRep = $allQuestions;
+    $repCount = $allCount;
+   $allQuestionsNoRep = '[]';
+   $noRepCount = 0;
+   $isNoAnswer = 'false';
+
  }
 
+} else {
+  $allQuestionsNoRep = $allQuestions;
+  $noRepCount = $allCount;
+  $allQuestionsRep = '[]';
+  $repCount = 0;
+  $isAnswer = 'false';
+}
+
+
+
+
+
+// On check si le user a deja répondu ou pas a cette question
+  $reponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', null)->get();
+  $i = 0;
+  $repQCM = array();
+  foreach ($reponse as $rep) {
+    $repQCM[$i] = $rep->idPossibilites;
+    $i++;
+  }
    //$picture ="'" . $questions[0]->picture . "'";
 
-  $picture = $questions[0]->picture;
-  return view('quizz.showOne', compact('questions', 'quizz', 'reponse', 'repQCM', 'picture', 'allQuestions'));
+$picture = $questions[0]->picture;
+return view('quizz.showOne', compact('questions', 'quizz', 'reponse', 'repQCM', 'picture', 'allQuestions', 'allQuestionsRep', 'allQuestionsNoRep', 'isAnswer', 'isNoAnswer', 'noRepCount', 'allCount', 'repCount'));
 }
 
 // Fonction qui permet de vérifier si une photo est tjr utilisé et la supprime sinon
@@ -208,10 +247,10 @@ public function isUse(){
 }
 
 public function newTentative($idQuizz) {
-session_start();
+  session_start();
 
- $_SESSION['newTentative'] = 0;
- return redirect()->action('QuizController@showOne', [$idQuizz, '1']);
+  $_SESSION['newTentative'] = 0;
+  return redirect()->action('QuizController@showOne', [$idQuizz, '1']);
 }
 
 public function resize_image($file, $w, $h, $crop=FALSE) {

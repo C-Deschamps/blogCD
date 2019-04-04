@@ -260,6 +260,10 @@ input[type=checkbox], input[type=radio] {
 
 .card-body.none { display: none; }
 
+.sidebar-nav {
+  font-size: 15px;
+}
+
 .sidebar-number {
     margin: 5px !important;
     width: 35px;
