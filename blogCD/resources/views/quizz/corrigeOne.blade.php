@@ -72,23 +72,23 @@
                      @if($reponse[0]->reponseSimple == 'true')
                 <div class="funkyradio-info">
 
-                 <input type="radio" name="{{ $questions[0]->id}}" id="radio{{ $questions[0]->id}}" value="true" checked disabled/>
+                 <input type="radio" name="{{ $questions[0]->id}}" id="radio{{ $questions[0]->id}}" value="true" disabled/>
                  <label for="radio{{ $questions[0]->id}}" class="faux">Vrai</label>
              </div>
 
              <div class="funkyradio-info">
-                <input type="radio" name="{{ $questions[0]->id}}" id="radi{{ $questions[0]->id}}" value="false" disabled/>
+                <input type="radio" name="{{ $questions[0]->id}}" id="radi{{ $questions[0]->id}}" value="false" checked disabled/>
                 <label for="radi{{ $questions[0]->id}}" class="juste">Faux</label>
             </div>
                     @elseif ($reponse[0]->reponseSimple == 'false')
             <div class="funkyradio-info">
 
-             <input type="radio" name="{{ $questions[0]->id}}" id="radio{{ $questions[0]->id}}" value="true" disabled/>
+             <input type="radio" name="{{ $questions[0]->id}}" id="radio{{ $questions[0]->id}}" value="true" checked disabled/>
              <label for="radio{{ $questions[0]->id}}" class="juste">Vrai</label>
          </div>
 
          <div class="funkyradio-info">
-            <input type="radio" name="{{ $questions[0]->id}}" id="radi{{ $questions[0]->id}}" value="false" checked disabled/>
+            <input type="radio" name="{{ $questions[0]->id}}" id="radi{{ $questions[0]->id}}" value="false" disabled/>
             <label for="radi{{ $questions[0]->id}}" class="faux">Faux</label>
         </div>
 
@@ -98,7 +98,7 @@
             @if ($questions[0]->reponse == 'true') {{-- Si la rep est Vrai --}}
         <div class="funkyradio-info">
 
-         <input type="radio" name="{{ $questions[0]->id}}" id="radio{{ $questions[0]->id}}" value="true" disabled />
+         <input type="radio" name="{{ $questions[0]->id}}" id="radio{{ $questions[0]->id}}" value="true" checked disabled />
          <label for="radio{{ $questions[0]->id}}" class="juste">Vrai</label>
      </div>
 
@@ -114,7 +114,7 @@
      </div>
 
      <div class="funkyradio-info">
-        <input type="radio" name="{{ $questions[0]->id}}" id="radi{{ $questions[0]->id}}" value="false" disabled/>
+        <input type="radio" name="{{ $questions[0]->id}}" id="radi{{ $questions[0]->id}}" value="false" checked disabled/>
         <label for="radi{{ $questions[0]->id}}" class="juste">Faux</label>
     </div>
             @endif
