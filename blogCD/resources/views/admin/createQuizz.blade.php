@@ -113,6 +113,11 @@
               </div>
 
             </div>
+            <div class="form-group">
+              {!! Form::label('description' . $i, 'Explication (optionelle)') !!}
+              {!! Form::textarea('description' . $i, null, ['class' => 'form-control', 'placeholder' => 'Entrez une explication de la question']) !!}
+              {!! $errors->first('description' . $i, '<small class="help-block">:message</small>') !!}
+            </div>
           </div>
           @endfor
           {!! Form::submit('Envoyer !', ['class' => 'btn btn-info pull-right']) !!}

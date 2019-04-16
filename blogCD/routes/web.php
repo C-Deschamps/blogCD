@@ -74,6 +74,6 @@ Route::post('/postQt/{id}/{idQuestion}', 'PossibilitesController@postQt');
 Route::get('/correction/{idQuizz}/{forceCorrec}', 'PossibilitesController@correction');
 
 Route::get('/newTentative/{idQuizz}', 'QuizController@newTentative');
-Route::get('/showCorrection/{idQuizz}', 'PossibilitesController@showCorrection');
+Route::get('/showCorrection/{idQuizz}', 'ScoresController@showCorrection');
 
 Route::get('/corrigeOne/{idQuizz}/{numQuestion}/{numTentative}', 'ReponsesController@corrigeOne');

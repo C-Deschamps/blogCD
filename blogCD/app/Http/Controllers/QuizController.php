@@ -16,6 +16,7 @@ class QuizController extends Controller
 {
  public function postQuizz(postQuizz $request){
    $inputs = $request->input();
+
    $nbrQt = $inputs['numberQt'];
    $quizz['name'] = $inputs['title'];
    $quizz['nbrQuestion'] = $nbrQt;
@@ -38,7 +39,11 @@ class QuizController extends Controller
     $possibilite['title'] = $inputs[$i . 'title'];
     $possibilite['NumQuestion'] = $i;
 
-    if (isset($inputs[$i . 'isPicture'])) {
+    if(isset($inputs['description' . $i])) { //si ya une description
+      $possibilite['description'] = $inputs['description' . $i];
+    }
+
+    if (isset($inputs[$i . 'isPicture'])) { //si il ya une image
 
      $image = $request->file($i . '_image');
 
@@ -178,8 +183,6 @@ class QuizController extends Controller
     $allQuestionsRepArray = array_unique($allQuestionsRepArray); //... permet d'utiliser cette fct
 
 
-
-
     if (!empty($allQuestionsRepArray)) { //SI le user a deja repondu a des questions
 
       $allQuestionsNoRepArray = DB::table('Possibilites')->where('idQuizz', '=', $idQuizz)->whereNotIn('NumQuestion', $allQuestionsRepArray)->orderBy('numQuestion', 'asc')->pluck('NumQuestion');
@@ -187,7 +190,7 @@ class QuizController extends Controller
 
       if (!empty($allQuestionsNoRepArray)) { //si le user n'as pas répondu a toute les questions
 
-    $allQuestionsNoRepArray = array_unique($allQuestionsNoRepArray); //... permet d'utiliser cette fct
+    $allQuestionsNoRepArray = array_unique($allQuestionsNoRepArray);
 
         $r = 0;
         foreach ($allQuestionsNoRepArray as $noRep) {
@@ -221,10 +224,6 @@ class QuizController extends Controller
   $repCount = 0;
   $isAnswer = 'false';
 }
-
-
-
-
 
 // On check si le user a deja répondu ou pas a cette question
   $reponse = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('numTentative', '=', null)->get();

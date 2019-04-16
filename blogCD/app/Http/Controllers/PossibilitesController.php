@@ -157,7 +157,18 @@ public function correction($idQuizz, $forceCorrec) {
       $question = array();
       $n = 0;
 
+      $listNumQst = Possibilites::where('idQuizz', '=', $idQuizz)->pluck('NumQuestion');
+       $listNumQst =  $listNumQst->unique();
+       $listNumQst = $listNumQst->toArray();
+       $listNumQst = array_values($listNumQst);
 
+      $listNumRep = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', null)->pluck('numQuestion');
+      $listNumRep =  $listNumRep->unique();
+       $listNumRep = $listNumRep->toArray();
+       $listNumRep = array_values($listNumRep);
+
+       $listNoReponse = array_diff($listNumQst, $listNumRep);
+        $listNoReponse = array_values($listNoReponse);
 
       $poss = Possibilites::where('idQuizz', '=', $idQuizz)->where('type', '=', 'QCM')->where('isRight', '=', 1)->orderBy('NumQuestion', 'asc')->get();
        foreach ($poss as $pos) { //On détermine le nombre de reponse juste par qcm
@@ -183,12 +194,16 @@ public function correction($idQuizz, $forceCorrec) {
           $listNoRep[$n] = $qst->numQuestion; //array qui contient le num des question pas fait
           $n ++;
        }
+       foreach ($listNoReponse as $noRep) {
+        array_push($listNoRep, $noRep); //ajout des reponse pas traité
+               }
+        sort($listNoRep);
 
        return view('quizz.nonTraite', compact('listNoRep', 'idQuizz'));
        }
-       }
+     }
 
-
+     //CORRECTION
       $scores = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->where('isRight', '=', 1)->where('numTentative', '=', null)->orderBy('numQuestion', 'asc')->get();
 
       foreach ($scores as $score) {
@@ -228,6 +243,18 @@ public function correction($idQuizz, $forceCorrec) {
       $scoreFinal['idQuizz'] = $idQuizz;
       $scoreFinal['score'] = $scoreQuizz;
 
+      //Ajout des questions non-vu
+      $noRepCreate['idQuizz'] = $idQuizz;
+      $noRepCreate['idUser'] = $userId;
+      $noRepCreate['isRight'] = 0;
+      $noRepCreate['idPossibilites'] = null;
+      $noRepCreate['reponseSimple'] = null;
+
+      foreach ($listNoReponse as $rep) {
+        $noRepCreate['numQuestion'] = $rep;
+        $create = Reponses::create($noRepCreate);
+        $create->save();
+              }
 
       //update du nombre de tentative
       $nbrTent = scores::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->orderBy('numTentative', 'dsc')->first();
@@ -246,8 +273,6 @@ public function correction($idQuizz, $forceCorrec) {
       $create = scores::create($scoreFinal);
       $create->save();
 
-
-
       $repUpdate = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', null)->update(['numTentative' => $nbrTentative]);
 
       //Passage du quizz en unavailable
@@ -261,32 +286,11 @@ public function correction($idQuizz, $forceCorrec) {
          $create = available::create($available);
       }
 
-
-
-
-      return redirect()->action('PossibilitesController@showCorrection', $idQuizz);
+      return redirect()->action('ScoresController@showCorrection', $idQuizz);
 
 }
 
-public function showCorrection($idQuizz) {
-  $user = Auth::user();
-  $userId = $user->id;
-  $userName = $user->name;
 
-  $maxTent = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->orderBy('numTentative', 'dsc')->first();
-  $maxTent = $maxTent->numTentative;
-
-  $allRep = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', $maxTent)->get();
-  $scores = scores::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', $maxTent)->first();
-
-  $scoreQuizz = $scores->score;
-  $nbrTentative = $scores->numTentative;
-
-  $nbrQst = quiz::where('id', '=', $idQuizz)->first();
-  $nbrQst = $nbrQst->nbrQuestion;
-
-return view('quizz.correction', compact('scoreQuizz', 'userName', 'nbrTentative', 'nbrQst', 'allRep'));
-}
 
 public function isRight($idQuizz, $numQuestion, $reponse) { //Fonction qui va comparer le résultatUser avec le bon résultat
    $poss = Possibilites::where('idQuizz', '=', $idQuizz)->where('numQuestion', '=', $numQuestion)->where('isRight', '=', 1)->get();
