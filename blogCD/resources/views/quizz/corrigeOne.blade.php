@@ -218,6 +218,11 @@
         </div>
 
     </div>
+    @if (isset($questions[0]->description))
+    <div class="description">
+        <p>{{ $questions[0]->description }}</p>
+    </div>
+    @endif
 </div>
 </div>
 <div class="sidebar-overlay none hide">
@@ -245,7 +250,11 @@
         <div>
             <a href="/corrigeOne/{{ $qst->idQuizz}}/{{ $qst->NumQuestion }}/{{ $numTentative }}" class="sidebar-one">
                 @if (in_array($qst->NumQuestion, $reponsesJusteList))
-                <input type="button" name="{{$qst->NumQuestion }}" class="sidebar-number juste" value="{{$qst->NumQuestion }}"></input>
+                    @if ($qst->orange == 0.5)
+                    <input type="button" name="{{$qst->NumQuestion }}" class="sidebar-number orange" value="{{$qst->NumQuestion }}"></input>
+                    @else
+                    <input type="button" name="{{$qst->NumQuestion }}" class="sidebar-number juste" value="{{$qst->NumQuestion }}"></input>
+                    @endif
                 @else
                 <input type="button" name="{{$qst->NumQuestion }}" class="sidebar-number faux" value="{{$qst->NumQuestion }}"></input>
                 @endif

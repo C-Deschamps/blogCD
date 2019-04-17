@@ -38,7 +38,7 @@
           <strong></strong><a href="/corrigeOne/{{ $rep->idQuizz}}/{{ $rep->numQuestion }}/{{ $nbrTentative }}" style="color: black;">{{ $rep->numQuestion }}</a>
        </div>
         @elseif ($rep->isRight == 0.5)
-        <div style="background-color: orange;">
+        <div style="background-color: #fd7e14;">
           <strong></strong><a href="/corrigeOne/{{ $rep->idQuizz}}/{{ $rep->numQuestion }}/{{ $nbrTentative }}" style="color: black;">{{ $rep->numQuestion }}</a>
        </div>
        @else
