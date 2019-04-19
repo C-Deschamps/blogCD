@@ -285,8 +285,10 @@ public function correction($idQuizz, $forceCorrec) {
          $available['idUser'] = $userId;
          $create = available::create($available);
       }
+      $maxTent = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->orderBy('numTentative', 'desc')->first();
+      $maxTent = $maxTent->numTentative;
 
-      return redirect()->action('ScoresController@showCorrection', $idQuizz);
+      return redirect()->action('ScoresController@showCorrection', [$idQuizz, $maxTent, $userId]);
 
 }
 

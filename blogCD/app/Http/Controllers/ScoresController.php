@@ -14,25 +14,22 @@ use App\available;
 class ScoresController extends Controller
 {
 
-public function showCorrection($idQuizz) {
+public function showCorrection($idQuizz, $numTentative, $idUser) {
   $user = Auth::user();
-  $userId = $user->id;
+  $idUser = $user->id;
   $userName = $user->name;
 
-  $maxTent = Reponses::where('idUser', '=', $userId)->where('idQuizz', '=', $idQuizz)->orderBy('numTentative', 'dsc')->first();
-  $maxTent = $maxTent->numTentative;
-
-  $allRep = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', $maxTent)->orderBy('numQuestion', 'asc')->get();
-  $scores = scores::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', $maxTent)->first();
+  $allRep = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $idUser)->where('numTentative', '=', $numTentative)->orderBy('numQuestion', 'asc')->get();
+  $scores = scores::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $idUser)->where('numTentative', '=', $numTentative)->first();
 
   $allRep = $allRep->unique('numQuestion');
-  //Extraction du qcm
+  //Extraction du qcm pour afficher qu'une case et peut etre en orange
   foreach ($allRep as $rep) {
     $green = 'false';
     $red = 'false';
     $orange = 'false';
     if ($rep->idPossibilites != null) { //si c'est une rep du qcm
-      $repQcm = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $userId)->where('numTentative', '=', $maxTent)->where('numQuestion', '=', $rep->numQuestion)->get();
+      $repQcm = Reponses::where('idQuizz', '=', $idQuizz)->where('idUser', '=', $idUser)->where('numTentative', '=', $numTentative)->where('numQuestion', '=', $rep->numQuestion)->get();
       foreach ($repQcm as $qcm ) {
         if ($qcm->isRight == 1) {
           $green = 'true';
