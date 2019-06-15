@@ -17,11 +17,15 @@ class CreateLikesTable extends Migration
             $table->increments('id');
             $table->integer('idSujet');
             $table->integer('idUser');
+            $table->integer('idComment');
+            $table->integer('idQuizz');
             $table->timestamps();
 
             $table->foreign('idUser')->references('id')->on('users')->onDelete('restrict')->onUpdate('restrict');
 
              $table->foreign('idSujet')->references('id')->on('sujets')->onDelete('restrict')->onUpdate('restrict');
+             $table->foreign('idComment')->references('id')->on('comments')->onDelete('restrict')->onUpdate('restrict');
+             $table->foreign('idQuizz')->references('id')->on('quizzes')->onDelete('restrict')->onUpdate('restrict');
         });
     }
 

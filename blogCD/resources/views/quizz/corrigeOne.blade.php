@@ -220,7 +220,7 @@
     </div>
     @if (isset($questions[0]->description))
     <div class="description">
-        <p>{{ $questions[0]->description }}</p>
+        <p style="margin: inherit;"{{-- Permet de ne pas appliquer la margin de base de la balise p --}}>{!! nl2br(e($questions[0]->description)) !!}</p>
     </div>
     @endif
 </div>

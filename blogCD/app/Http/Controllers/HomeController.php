@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use App\scores;
 use App\available;
 use App\comments;
+use App\sujets;
+use DB;
 
 class HomeController extends Controller
 {
@@ -47,6 +49,25 @@ class HomeController extends Controller
             $score->nbrQuestion = $nomQuizz->nbrQuestion;
         }
 
+        $lastComment = comments::where('idUser', $idUser)->orderBy('updated_at', 'desc')->take(3)->get();
+        foreach ($lastComment as $com) {
+            $sujet = sujets::where('id', $com->idSujet)->first();
+            $com->nomSujet = $sujet->title;
+            //Determination du num de page
+            $i = $sujet->nbrMessages;
+            $i = (int)($i/10);
+            for ($j = 0; $j <= $i; $j++){
+                $listComment = comments::where('idSujet', $com->idSujet)->orderBy('updated_at', 'asc')->skip($j * 10)->take(10)->pluck('id'); //On recupe les 10 com par page
+                $listComment = $listComment->toArray();
+                if (in_array($com->id, $listComment)){ //On regarde si le com qu'on a est contenu dans cette page grace aux id
+                    $com->numPage = $j + 1;
+                }
+
+            }
+
+        }
+
+
         $nbrCommentaire = comments::where('idUser', $idUser)->get();
         $nbrCommentaire = count($nbrCommentaire);
 
@@ -55,6 +76,6 @@ class HomeController extends Controller
 
         $nbrTentative = scores::where('idUser', '=', $idUser)->get();
         $nbrTentative = count($nbrTentative);
-        return view('UserInfo.show', compact('userInfo', 'lastScores', 'nbrCommentaire', 'nbrQuizzFini', 'nbrTentative'));
+        return view('UserInfo.show', compact('userInfo', 'lastScores', 'nbrCommentaire', 'nbrQuizzFini', 'nbrTentative', 'lastComment'));
     }
 }

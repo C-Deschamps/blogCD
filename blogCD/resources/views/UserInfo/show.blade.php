@@ -21,7 +21,7 @@
        <div>
        Nombre de messages : {{ $nbrCommentaire }}</br>
        Nombre de Quizz complétés : {{ $nbrQuizzFini }}</br>
-       Nombre de tentative total : {{ $nbrTentative }}
+       Nombre de tentatives : {{ $nbrTentative }}
        </div>
      </div>
    </div>
@@ -69,18 +69,18 @@
 
             <thead>
               <tr>
-               <th scope="col">Nom</th>
-               <th scope="col">Score</th>
-               <th scope="col">Tentative</th>
+               <th scope="col">Sujet</th>
+               <th scope="col">Page</th>
+               <th scope="col">Like</th>
 
              </tr>
            </thead>
            <tbody>
-             @foreach ($lastScores as $score)
+             @foreach ($lastComment as $com)
              <tr>
-             <th scope="row" class="col-5"><a href="/showCorrection/{{ $score->idQuizz }}/{{ $score->numTentative }}/{{ $score->idUser }}"> {{ $score->nomQuizz}}</a></th>
-              <td class="col-3">{{ $score->score }}/{{ $score->nbrQuestion }}</td>
-              <td class="col-4">{{ $score->numTentative }}</td>
+             <th scope="row" class="col-5"><a href="/showOneSujet/{{ $com->idSujet }}/{{ $com->numPage }}"> {{ $com->nomSujet}}</a></th>
+              <td class="col-3">{{ $com->numPage }}</td>
+              <td class="col-4">0 {{-- nbrLike --}}</td>
             </tr>
             @endforeach
           </tbody>
